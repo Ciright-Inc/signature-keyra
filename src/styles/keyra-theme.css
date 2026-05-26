@@ -62,7 +62,7 @@
   color: var(--keyra-ink-muted-on-light);
 }
 
-.keyra-readable-on-light :where(a):not([class*="text-"]) {
+.keyra-readable-on-light :where(a):not([class*="text-"]):not(.keyra-btn) {
   color: var(--keyra-accent);
 }
 

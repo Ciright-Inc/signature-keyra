@@ -18,10 +18,8 @@ export function SignaturersHeader() {
   const { isAuthenticated, initialized, headerLabel, logout } = useKeyraSession();
   const pathname = usePathname();
 
-  const accessHref =
-    typeof window !== "undefined"
-      ? buildGetStartedAccessUrl(`${signaturersOrigin()}${pathname}`)
-      : buildGetStartedAccessUrl(`${signaturersOrigin()}/vault`);
+  const path = pathname.startsWith("/") ? pathname : `/${pathname}`;
+  const accessHref = buildGetStartedAccessUrl(`${signaturersOrigin()}${path}`);
 
   return (
     <header className="sticky top-0 z-50 border-b border-[var(--keyra-border)] bg-[var(--keyra-canvas)]/95 backdrop-blur-md">

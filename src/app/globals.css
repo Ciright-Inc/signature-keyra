@@ -78,18 +78,43 @@ body {
   line-height: 1.65;
 }
 
-.keyra-btn-primary {
+.keyra-btn-primary,
+a.keyra-btn-primary,
+button.keyra-btn-primary {
   background: var(--keyra-primary, #000);
-  color: var(--keyra-white, #fff);
+  color: #ffffff;
   border: 1px solid var(--keyra-primary, #000);
 }
 
-.keyra-btn-primary:hover {
+.keyra-btn-primary:hover,
+a.keyra-btn-primary:hover,
+button.keyra-btn-primary:hover {
   background: var(--keyra-accent-2, #262626);
+  border-color: var(--keyra-accent-2, #262626);
+  color: #ffffff;
+}
+
+@keyframes keyra-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.keyra-fade-in {
+  animation: keyra-fade-in 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
+  }
+
+  .keyra-fade-in {
+    animation: none;
   }
 }

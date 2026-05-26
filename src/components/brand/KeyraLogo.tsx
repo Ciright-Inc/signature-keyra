@@ -3,13 +3,15 @@ import { KEYRA_LOGO_SRC } from "@/lib/keyraBrandAssets";
 
 export function KeyraLogo({ className = "" }: { className?: string }) {
   return (
-    <Image
-      src={KEYRA_LOGO_SRC}
-      alt="Keyra"
-      width={120}
-      height={32}
-      className={`h-8 w-auto object-contain ${className}`}
-      priority
-    />
+    <span className={`relative inline-block h-8 w-[7.5rem] shrink-0 ${className}`}>
+      <Image
+        src={KEYRA_LOGO_SRC}
+        alt="Keyra"
+        fill
+        sizes="120px"
+        className="object-contain object-left"
+        priority
+      />
+    </span>
   );
 }
