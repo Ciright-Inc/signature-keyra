@@ -1,0 +1,558 @@
+/*
+ * Keyra brand theme — portable design tokens (editorial light).
+ *
+ * Benchmark: crisp white field, black typography, hairline rules — similar in
+ * spirit to institutional product pages (e.g. SLC Guardian). No SaaS-neon accent;
+ * use tokens, not one-off hex.
+ */
+
+:root {
+  --keyra-bg: #ffffff;
+  --keyra-surface: #fafafa;
+  --keyra-surface-2: #f0f0f0;
+  --keyra-text: #000000;
+  --keyra-text-secondary: rgba(0, 0, 0, 0.55);
+  --keyra-white: #ffffff;
+
+  --keyra-canvas: #ffffff;
+  --keyra-surface-light: #fafafa;
+  --keyra-surface-muted: #f4f4f4;
+  --keyra-ink-on-light: #000000;
+  --keyra-ink-muted-on-light: rgba(0, 0, 0, 0.55);
+
+  --keyra-ink-mid: rgba(0, 0, 0, 0.45);
+  --keyra-ink-low: rgba(0, 0, 0, 0.38);
+
+  --keyra-accent: #000000;
+  --keyra-accent-2: #262626;
+
+  --keyra-primary: var(--keyra-text);
+
+  --keyra-action: rgba(0, 0, 0, 0.06);
+  --keyra-action-border: rgba(0, 0, 0, 0.18);
+  --keyra-action-text: var(--keyra-text);
+
+  --keyra-border: rgba(0, 0, 0, 0.08);
+  --keyra-ring: rgba(0, 0, 0, 0.2);
+  --keyra-shadow-card: 0 8px 32px rgba(0, 0, 0, 0.05);
+  --keyra-shadow-hover: 0 14px 44px rgba(0, 0, 0, 0.07);
+
+  --keyra-radius-card: 12px;
+  --keyra-radius-sheet: 16px;
+  --keyra-radius-pill: 999px;
+
+  --keyra-font-sans: var(--font-inter, "Inter"), -apple-system, BlinkMacSystemFont,
+    "Segoe UI", Roboto, system-ui, sans-serif;
+
+  --keyra-marketing-hero-image:
+    radial-gradient(1200px 700px at 20% 15%, rgba(0, 0, 0, 0.04), transparent 55%),
+    radial-gradient(900px 540px at 80% 25%, rgba(0, 0, 0, 0.035), transparent 55%),
+    radial-gradient(950px 640px at 55% 85%, rgba(0, 0, 0, 0.03), transparent 60%);
+}
+
+.keyra-readable-on-light {
+  color: var(--keyra-ink-on-light);
+}
+
+.keyra-readable-on-light :where(h1, h2, h3, h4, h5, h6):not([class*="text-"]) {
+  color: var(--keyra-ink-on-light);
+}
+
+.keyra-readable-on-light :where(p, li, dd, dt, label, td, th):not([class*="text-"]) {
+  color: var(--keyra-ink-muted-on-light);
+}
+
+.keyra-readable-on-light :where(a):not([class*="text-"]) {
+  color: var(--keyra-accent);
+}
+
+.keyra-hero {
+  position: relative;
+  background: var(--keyra-bg);
+  color: var(--keyra-text);
+  isolation: isolate;
+  overflow: hidden;
+}
+.keyra-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(1200px 700px at 20% 15%, rgba(0, 0, 0, 0.04), transparent 55%),
+    radial-gradient(900px 540px at 80% 25%, rgba(0, 0, 0, 0.035), transparent 55%),
+    radial-gradient(950px 640px at 55% 85%, rgba(0, 0, 0, 0.03), transparent 60%);
+  pointer-events: none;
+  z-index: 0;
+}
+.keyra-hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(180deg, transparent 0%, transparent 60%, var(--keyra-bg) 100%);
+  pointer-events: none;
+  z-index: 0;
+}
+.keyra-hero > * {
+  position: relative;
+  z-index: 1;
+}
+
+.keyra-hero-title {
+  color: var(--keyra-primary);
+  font-family: var(--keyra-font-sans);
+  letter-spacing: -0.01em;
+}
+.keyra-hero-subtitle {
+  color: var(--keyra-text-secondary);
+  font-family: var(--keyra-font-sans);
+}
+
+.keyra-signal-dot {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 9999px;
+  background: radial-gradient(
+    circle at 30% 30%,
+    rgba(10, 10, 10, 0.5),
+    rgba(10, 10, 10, 0.1) 55%,
+    rgba(10, 10, 10, 0) 70%
+  );
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.06),
+    0 0 48px rgba(0, 0, 0, 0.04);
+  animation: keyra-signal 4.5s ease-in-out infinite;
+  pointer-events: none;
+}
+.keyra-signal-dot.lg { width: 8px; height: 8px; }
+
+@keyframes keyra-signal {
+  0%, 100% { opacity: 0.45; transform: translateY(0); }
+  50%      { opacity: 0.9;  transform: translateY(-2px); }
+}
+@keyframes keyra-drift {
+  0%, 100% { transform: translate(0, 0); }
+  50%      { transform: translate(10px, -12px); }
+}
+@keyframes keyra-pulse-soft {
+  0%, 100% { opacity: 0.45; }
+  50%      { opacity: 0.75; }
+}
+.animate-keyra-drift {
+  animation: keyra-drift 18s ease-in-out infinite;
+}
+.animate-keyra-pulse-soft {
+  animation: keyra-pulse-soft 8s ease-in-out infinite;
+}
+
+.keyra-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.65rem 1.25rem;
+  font-family: var(--keyra-font-sans);
+  font-size: 0.95rem;
+  font-weight: 600;
+  line-height: 1;
+  border-radius: var(--keyra-radius-pill);
+  border: 1px solid var(--keyra-accent);
+  background: var(--keyra-accent);
+  color: var(--keyra-white);
+  cursor: pointer;
+  transition: transform 120ms ease, box-shadow 200ms ease, background 200ms ease;
+  text-decoration: none;
+  user-select: none;
+}
+.keyra-btn:hover {
+  background: var(--keyra-accent-2);
+  border-color: var(--keyra-accent-2);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+  transform: translateY(-1px);
+}
+.keyra-btn:focus-visible {
+  outline: 2px solid transparent;
+  box-shadow: 0 0 0 4px var(--keyra-ring);
+}
+.keyra-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.keyra-btn-ghost {
+  background: transparent;
+  color: var(--keyra-text);
+  border-color: var(--keyra-border);
+}
+.keyra-btn-ghost:hover {
+  background: rgba(0, 0, 0, 0.04);
+  border-color: rgba(0, 0, 0, 0.2);
+  box-shadow: none;
+}
+
+.keyra-btn-light {
+  background: var(--keyra-surface-muted);
+  border-color: rgba(0, 0, 0, 0.15);
+  color: var(--keyra-text);
+}
+.keyra-btn-light:hover {
+  background: var(--keyra-surface-2);
+  border-color: rgba(0, 0, 0, 0.22);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+}
+
+.keyra-card {
+  border-radius: var(--keyra-radius-card);
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.02),
+    rgba(0, 0, 0, 0.01)
+  );
+  border: 1px solid var(--keyra-border);
+  box-shadow: var(--keyra-shadow-card);
+  backdrop-filter: blur(10px);
+  color: var(--keyra-text);
+}
+.keyra-card:hover {
+  box-shadow: var(--keyra-shadow-hover);
+}
+
+.keyra-focus-ring:focus-visible {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px var(--keyra-ring);
+}
+
+.keyra-link {
+  color: var(--keyra-accent);
+  text-decoration: none;
+  transition: color 150ms ease;
+}
+.keyra-link:hover {
+  color: var(--keyra-accent-2);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.keyra-topbar {
+  background: var(--keyra-bg);
+  color: var(--keyra-text);
+  border-bottom: 1px solid var(--keyra-border);
+}
+.keyra-topbar a,
+.keyra-topbar button {
+  color: var(--keyra-text);
+}
+.keyra-topbar a:hover {
+  color: var(--keyra-accent-2);
+}
+
+/* -------------------------------------------------------------------------- */
+/* Full-bleed section bands — editorial white / black alternation              */
+/* (reference: institutional product pages with strict contrast rhythm)        */
+/* -------------------------------------------------------------------------- */
+
+.keyra-band--light {
+  background: #ffffff;
+  color: #000000;
+  --keyra-bg: #ffffff;
+  --keyra-surface: #fafafa;
+  --keyra-primary: #000000;
+  --keyra-text: #000000;
+  --keyra-text-secondary: rgba(0, 0, 0, 0.55);
+  --keyra-border: rgba(0, 0, 0, 0.1);
+  --keyra-ring: rgba(0, 0, 0, 0.22);
+  --keyra-accent: #000000;
+  --keyra-accent-2: #262626;
+  --keyra-action: rgba(0, 0, 0, 0.07);
+  --keyra-action-border: rgba(0, 0, 0, 0.2);
+  --keyra-action-text: #000000;
+}
+
+.keyra-band--dark {
+  background: #000000;
+  color: #ffffff;
+  --keyra-bg: #000000;
+  --keyra-surface: rgba(255, 255, 255, 0.06);
+  --keyra-primary: #ffffff;
+  --keyra-text: #ffffff;
+  --keyra-text-secondary: rgba(255, 255, 255, 0.68);
+  --keyra-border: rgba(255, 255, 255, 0.14);
+  --keyra-ring: rgba(255, 255, 255, 0.35);
+  --keyra-accent: #ffffff;
+  --keyra-accent-2: rgba(255, 255, 255, 0.88);
+  --keyra-action: rgba(255, 255, 255, 0.12);
+  --keyra-action-border: rgba(255, 255, 255, 0.28);
+  --keyra-action-text: #ffffff;
+}
+
+.keyra-band--dark .keyra-card {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.07),
+    rgba(255, 255, 255, 0.03)
+  );
+  border-color: var(--keyra-border);
+  color: var(--keyra-text);
+}
+
+.keyra-band--dark .keyra-card:hover {
+  border-color: rgba(255, 255, 255, 0.22);
+}
+
+/* Readable HUD readouts over cinematic / dark media (e.g. globe): solid surface, no glass washout */
+.keyra-card.keyra-card--media-hud {
+  background: var(--keyra-bg);
+  color: var(--keyra-text);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  box-shadow:
+    0 16px 48px rgba(0, 0, 0, 0.12),
+    0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.keyra-band--dark .keyra-card.keyra-card--media-hud {
+  box-shadow:
+    0 20px 64px rgba(0, 0, 0, 0.55),
+    0 0 0 1px rgba(255, 255, 255, 0.12);
+}
+
+.keyra-band--dark .keyra-link:hover {
+  color: #ffffff;
+}
+
+/* Site footer — full-width black (institutional contrast; refs: SLC-style footers) */
+.keyra-site-footer {
+  background: #000000;
+  color: rgba(255, 255, 255, 0.88);
+  --keyra-bg: #000000;
+  --keyra-surface: rgba(255, 255, 255, 0.07);
+  --keyra-primary: #ffffff;
+  --keyra-text: #ffffff;
+  --keyra-text-secondary: rgba(255, 255, 255, 0.65);
+  --keyra-border: rgba(255, 255, 255, 0.14);
+  --keyra-accent: #ffffff;
+  --keyra-accent-2: rgba(255, 255, 255, 0.88);
+  --keyra-ring: rgba(255, 255, 255, 0.35);
+  --keyra-action: rgba(255, 255, 255, 0.12);
+  --keyra-action-border: rgba(255, 255, 255, 0.28);
+  --keyra-action-text: #ffffff;
+}
+
+/* Dark-on-transparent wordmarks on black */
+.keyra-site-footer-logo img {
+  filter: brightness(0) invert(1);
+  opacity: 0.95;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Marketing 3-column footer — keyra.ie SiteFooter parity                     */
+/* Markup: <footer class="site-footer keyra-site-footer">                     */
+/*           <div class="shell footer-keyra">…</div></footer>                */
+/* Used by simsecure + get-started; tokens come from .keyra-site-footer.     */
+/* -------------------------------------------------------------------------- */
+
+.site-footer.keyra-site-footer {
+  padding: 0;
+  margin: 0;
+  border-top: 1px solid var(--keyra-border, rgba(255, 255, 255, 0.14));
+  font-size: 13px;
+  background: #000000;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.site-footer.keyra-site-footer .shell.footer-keyra {
+  box-sizing: border-box;
+  max-width: 1280px;
+  margin: 0 auto;
+  width: 100%;
+  padding: 32px 16px 32px;
+}
+
+@media (min-width: 640px) {
+  .site-footer.keyra-site-footer .shell.footer-keyra {
+    padding-top: 40px;
+    padding-bottom: 40px;
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .site-footer.keyra-site-footer .shell.footer-keyra {
+    padding-top: 44px;
+    padding-bottom: 44px;
+    padding-left: 32px;
+    padding-right: 32px;
+  }
+}
+
+.footer-keyra__grid {
+  display: grid;
+  gap: 40px;
+  align-items: flex-start;
+  padding-bottom: 0;
+}
+
+@media (min-width: 1025px) {
+  .footer-keyra__grid {
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr) minmax(0, 1fr);
+    gap: 48px;
+    column-gap: max(48px, 3vw);
+  }
+
+  /* Open field — no vertical rules (matches public keyra.ie feel) */
+  .footer-keyra__col--ruled {
+    padding-left: 0;
+    border-left: none;
+  }
+}
+
+.footer-keyra__section-title {
+  margin: 0 0 10px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.footer-keyra__lede {
+  margin: 0;
+  max-width: 28rem;
+  font-size: 13px;
+  line-height: 1.65;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.footer-keyra__switcher {
+  margin-top: 14px;
+}
+
+.footer-keyra__lane-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+@media (min-width: 640px) {
+  .footer-keyra__lane-row {
+    gap: 8px;
+  }
+}
+
+.footer-keyra__lane-pill {
+  display: inline-flex;
+  align-items: center;
+  min-height: 36px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.04);
+  padding: 0 12px;
+  font-size: 11px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.75) !important;
+  text-decoration: none !important;
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.footer-keyra__lane-pill:hover {
+  border-color: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff !important;
+}
+
+.footer-keyra__home-link {
+  display: inline-flex;
+  margin-top: 14px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #ffffff !important;
+  text-underline-offset: 4px;
+}
+
+.footer-keyra__home-link:hover {
+  text-decoration: underline;
+}
+
+.footer-keyra__nav {
+  margin-top: 10px;
+}
+
+.footer-keyra__link-columns {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px 18px;
+}
+
+.footer-keyra__link-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.footer-keyra__link-list li {
+  margin: 0 0 8px;
+}
+
+.footer-keyra__link {
+  display: block;
+  font-size: 14px;
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.65) !important;
+  text-decoration: none !important;
+  transition: color 0.2s ease;
+}
+
+.footer-keyra__link:hover {
+  color: #ffffff !important;
+}
+
+.footer-keyra__copyright {
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid color-mix(in srgb, var(--keyra-border, rgba(255, 255, 255, 0.14)) 80%, transparent);
+  text-align: center;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+@media (min-width: 640px) {
+  .footer-keyra__copyright {
+    text-align: left;
+  }
+}
+
+/* -------------------------------------------------------------------------- */
+/* Site header shell — Keyra marketing parity (visible edge, frosted field)   */
+/* Add z-index in markup (e.g. Tailwind z-[var(--keyra-z-header)]).          */
+/* Use .keyra-site-header-shell--fixed with simsecure-style fixed stacking.   */
+/* -------------------------------------------------------------------------- */
+
+.keyra-site-header-shell {
+  position: sticky;
+  top: 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+  background: color-mix(in srgb, var(--keyra-bg, #ffffff) 90%, transparent);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.keyra-site-header-shell--fixed {
+  position: fixed;
+  left: 0;
+  right: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .keyra-site-header-shell {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background: var(--keyra-bg, #ffffff);
+  }
+}

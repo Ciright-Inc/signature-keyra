@@ -1,0 +1,95 @@
+@import "tailwindcss";
+@import "../styles/keyra-theme.css";
+
+:root {
+  --keyra-header-offset: 3.5rem;
+  --font-sans: var(--font-inter, "Inter"), system-ui, sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--keyra-canvas);
+  color: var(--keyra-ink-on-light);
+  font-family: var(--font-sans);
+}
+
+.font-sans {
+  font-family: var(--font-sans);
+}
+
+.keyra-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2rem 0.55rem;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  background: var(--keyra-surface-muted, #f4f4f4);
+  color: var(--keyra-ink-muted-on-light);
+  border: 1px solid var(--keyra-border);
+  border-radius: 999px;
+}
+
+.keyra-badge-role {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+.keyra-badge-world {
+  text-transform: none;
+  font-size: 0.75rem;
+}
+
+.keyra-btn-secondary {
+  background: var(--keyra-action);
+  color: var(--keyra-action-text);
+  border: 1px solid var(--keyra-action-border);
+}
+
+.keyra-btn-ghost {
+  background: transparent;
+  color: var(--keyra-ink-on-light);
+  border: 1px solid transparent;
+}
+
+.keyra-btn-ghost:hover {
+  background: rgba(0, 0, 0, 0.03);
+}
+
+.keyra-eyebrow-trust {
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--keyra-ink-muted-on-light);
+}
+
+.keyra-display-trust {
+  color: var(--keyra-ink-on-light);
+  letter-spacing: -0.02em;
+  line-height: 1.08;
+}
+
+.keyra-prose-trust {
+  color: var(--keyra-ink-muted-on-light);
+  line-height: 1.65;
+}
+
+.keyra-btn-primary {
+  background: var(--keyra-primary, #000);
+  color: var(--keyra-white, #fff);
+  border: 1px solid var(--keyra-primary, #000);
+}
+
+.keyra-btn-primary:hover {
+  background: var(--keyra-accent-2, #262626);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
