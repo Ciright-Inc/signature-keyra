@@ -4,9 +4,10 @@
 
 [build]
 builder = "nixpacks"
-# Some build environments can keep `node_modules/.cache` locked (EBUSY), making `rm -rf` fail.
-# Renaming `node_modules` is more resilient; `npm ci` then recreates a clean tree.
-buildCommand = "if [ -d node_modules ]; then mv node_modules \"node_modules.__old__$(date +%s)\" || true; fi; npm ci && npm run build"
+# Some build environments keep `node_modules/.cache` locked (EBUSY), which breaks `npm ci`
+# because it tries to remove `node_modules` before reinstalling.
+# `npm install` is non-destructive and avoids the rmdir step.
+buildCommand = "npm install --include=dev --no-audit --no-fund && npm run build"
 
 [deploy]
 startCommand = "npm run start"
