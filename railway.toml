@@ -4,7 +4,9 @@
 
 [build]
 builder = "nixpacks"
-buildCommand = "npm ci && npm run build"
+# `npm ci` expects a clean node_modules; some build environments can leave a locked `.cache`.
+# Ensure a clean install to avoid EBUSY rmdir errors.
+buildCommand = "rm -rf node_modules node_modules/.cache && npm ci && npm run build"
 
 [deploy]
 startCommand = "npm run start"
