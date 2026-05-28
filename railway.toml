@@ -4,9 +4,9 @@
 
 [build]
 builder = "nixpacks"
-# `npm ci` expects a clean node_modules; some build environments can leave a locked `.cache`.
-# Ensure a clean install to avoid EBUSY rmdir errors.
-buildCommand = "rm -rf node_modules node_modules/.cache && npm ci && npm run build"
+# Some build environments can keep `node_modules/.cache` locked (EBUSY), making `rm -rf` fail.
+# Renaming `node_modules` is more resilient; `npm ci` then recreates a clean tree.
+buildCommand = "if [ -d node_modules ]; then mv node_modules \"node_modules.__old__$(date +%s)\" || true; fi; npm ci && npm run build"
 
 [deploy]
 startCommand = "npm run start"
