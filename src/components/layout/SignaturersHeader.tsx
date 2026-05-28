@@ -65,9 +65,20 @@ export function SignaturersHeader() {
               </button>
             </>
           ) : (
-            <a href={accessHref} className="keyra-btn keyra-btn-primary text-sm">
+            <button
+              type="button"
+              className="keyra-btn keyra-btn-primary text-sm"
+              onClick={() => {
+                const popup = window.open(
+                  accessHref,
+                  "keyra_get_started_login",
+                  "popup=yes,width=520,height=760,noopener",
+                );
+                if (!popup) window.location.href = accessHref;
+              }}
+            >
               Sign in
-            </a>
+            </button>
           )}
           <a
             href={keyraMarketingOrigin()}

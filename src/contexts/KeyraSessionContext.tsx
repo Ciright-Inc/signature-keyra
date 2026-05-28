@@ -91,6 +91,55 @@ export function KeyraSessionProvider({ children }: { children: ReactNode }) {
     void fetchSession();
   }, [fetchSession]);
 
+  useEffect(() => {
+    const onVisible = () => {
+      if (document.visibilityState === "visible") void fetchSession();
+    };
+    document.addEventListener("visibilitychange", onVisible);
+    return () => document.removeEventListener("visibilitychange", onVisible);
+  }, [fetchSession]);
+
+  useEffect(() => {
+    let interval: ReturnType<typeof setInterval>;
+    const schedule = () => {
+      clearInterval(interval);
+      if (document.visibilityState === "visible") {
+        interval = setInterval(() => void fetchSession(), 15_000);
+      }
+    };
+    schedule();
+    document.addEventListener("visibilitychange", schedule);
+    return () => {
+      clearInterval(interval);
+      document.removeEventListener("visibilitychange", schedule);
+    };
+  }, [fetchSession]);
+
+  useEffect(() => {
+    let channel: BroadcastChannel | undefined;
+    try {
+      channel = new BroadcastChannel(AUTH_CHANNEL);
+      channel.onmessage = (e) => {
+        if (e?.data?.type === "logout") setUser(null);
+        if (e?.data?.type === "refresh") void fetchSession();
+      };
+    } catch {
+      // ignore
+    }
+    return () => channel?.close();
+  }, [fetchSession]);
+
+  useEffect(() => {
+    const onMessage = (event: MessageEvent) => {
+      if (!event?.data || typeof event.data !== "object") return;
+      const data = event.data as { type?: unknown };
+      if (data.type !== "keyra:session-updated") return;
+      void fetchSession();
+    };
+    window.addEventListener("message", onMessage);
+    return () => window.removeEventListener("message", onMessage);
+  }, [fetchSession]);
+
   const logout = useCallback(async () => {
     await fetch("/api/auth/logout", { method: "POST", credentials: "include" });
     setUser(null);
