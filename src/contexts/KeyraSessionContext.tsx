@@ -20,6 +20,11 @@ export type KeyraSessionUser = {
 const AUTH_CHANNEL = "keyra-auth";
 const SESSION_TIMEOUT_MS = 4000;
 const SESSION_SYNC_INTERVAL_MS = 8_000;
+const DIRECT_AUTH_BACKEND = (
+  process.env.NEXT_PUBLIC_SIMSECURE_AUTH_BACKEND_URL ??
+  process.env.NEXT_PUBLIC_AUTH_BACKEND_URL ??
+  "https://auth.keyra.ie"
+).replace(/\/+$/, "");
 
 type AuthSessionPayload = {
   authenticated: boolean;
@@ -36,20 +41,55 @@ function authSessionDisplayName(
   return undefined;
 }
 
+function shouldUseDirectAuthFallback(): boolean {
+  if (typeof window === "undefined") return false;
+  if (process.env.NEXT_PUBLIC_KEYRA_FORCE_DIRECT_AUTH === "1") return true;
+  return window.location.hostname.toLowerCase().endsWith(".up.railway.app");
+}
+
+function parseSessionPayload(payload: AuthSessionPayload): KeyraSessionUser | null {
+  if (!payload.authenticated || !payload.user?.phone) return null;
+  const phone = payload.user.phone.startsWith("+") ? payload.user.phone : `+${payload.user.phone}`;
+  return { phoneE164: phone, displayName: authSessionDisplayName(payload.user) };
+}
+
 async function fetchSessionUser(signal?: AbortSignal): Promise<KeyraSessionUser | null> {
   try {
-    const res = await fetch("/api/auth/session", {
+    let res = await fetch("/api/auth/session", {
       method: "GET",
       credentials: "include",
       cache: "no-store",
       headers: { "Cache-Control": "no-cache", Pragma: "no-cache" },
       signal,
     });
+    if (!res.ok && shouldUseDirectAuthFallback()) {
+      res = await fetch(`${DIRECT_AUTH_BACKEND}/auth/session`, {
+        method: "GET",
+        credentials: "include",
+        cache: "no-store",
+        headers: { "Cache-Control": "no-cache", Pragma: "no-cache" },
+        signal,
+      });
+    }
     if (!res.ok) return null;
+
     const payload = (await res.json()) as AuthSessionPayload;
-    if (!payload.authenticated || !payload.user?.phone) return null;
-    const phone = payload.user.phone.startsWith("+") ? payload.user.phone : `+${payload.user.phone}`;
-    return { phoneE164: phone, displayName: authSessionDisplayName(payload.user) };
+    const parsed = parseSessionPayload(payload);
+    if (parsed) return parsed;
+
+    if (shouldUseDirectAuthFallback()) {
+      const directRes = await fetch(`${DIRECT_AUTH_BACKEND}/auth/session`, {
+        method: "GET",
+        credentials: "include",
+        cache: "no-store",
+        headers: { "Cache-Control": "no-cache", Pragma: "no-cache" },
+        signal,
+      });
+      if (!directRes.ok) return null;
+      const directPayload = (await directRes.json()) as AuthSessionPayload;
+      return parseSessionPayload(directPayload);
+    }
+    return null;
   } catch {
     return null;
   }
@@ -155,6 +195,12 @@ export function KeyraSessionProvider({ children }: { children: ReactNode }) {
 
   const logout = useCallback(async () => {
     await fetch("/api/auth/logout", { method: "POST", credentials: "include" });
+    if (shouldUseDirectAuthFallback()) {
+      await fetch(`${DIRECT_AUTH_BACKEND}/auth/logout`, {
+        method: "POST",
+        credentials: "include",
+      });
+    }
     setUser(null);
     try {
       new BroadcastChannel(AUTH_CHANNEL).postMessage({ type: "logout" });
