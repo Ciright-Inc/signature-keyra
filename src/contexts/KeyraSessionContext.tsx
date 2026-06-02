@@ -19,6 +19,7 @@ export type KeyraSessionUser = {
 
 const AUTH_CHANNEL = "keyra-auth";
 const SESSION_TIMEOUT_MS = 4000;
+const SESSION_SYNC_INTERVAL_MS = 8_000;
 
 type AuthSessionPayload = {
   authenticated: boolean;
@@ -100,11 +101,23 @@ export function KeyraSessionProvider({ children }: { children: ReactNode }) {
   }, [fetchSession]);
 
   useEffect(() => {
+    const syncNow = () => void fetchSession();
+    window.addEventListener("focus", syncNow);
+    window.addEventListener("pageshow", syncNow);
+    window.addEventListener("online", syncNow);
+    return () => {
+      window.removeEventListener("focus", syncNow);
+      window.removeEventListener("pageshow", syncNow);
+      window.removeEventListener("online", syncNow);
+    };
+  }, [fetchSession]);
+
+  useEffect(() => {
     let interval: ReturnType<typeof setInterval>;
     const schedule = () => {
       clearInterval(interval);
       if (document.visibilityState === "visible") {
-        interval = setInterval(() => void fetchSession(), 15_000);
+        interval = setInterval(() => void fetchSession(), SESSION_SYNC_INTERVAL_MS);
       }
     };
     schedule();
