@@ -20,6 +20,7 @@ export type KeyraSessionUser = {
 const AUTH_CHANNEL = "keyra-auth";
 const SESSION_TIMEOUT_MS = 4000;
 const SESSION_SYNC_INTERVAL_MS = 8_000;
+const SESSION_SYNC_HIDDEN_INTERVAL_MS = 20_000;
 const DIRECT_AUTH_BACKEND = (
   process.env.NEXT_PUBLIC_SIMSECURE_AUTH_BACKEND_URL ??
   process.env.NEXT_PUBLIC_AUTH_BACKEND_URL ??
@@ -156,9 +157,11 @@ export function KeyraSessionProvider({ children }: { children: ReactNode }) {
     let interval: ReturnType<typeof setInterval>;
     const schedule = () => {
       clearInterval(interval);
-      if (document.visibilityState === "visible") {
-        interval = setInterval(() => void fetchSession(), SESSION_SYNC_INTERVAL_MS);
-      }
+      const ms =
+        document.visibilityState === "visible"
+          ? SESSION_SYNC_INTERVAL_MS
+          : SESSION_SYNC_HIDDEN_INTERVAL_MS;
+      interval = setInterval(() => void fetchSession(), ms);
     };
     schedule();
     document.addEventListener("visibilitychange", schedule);
@@ -195,12 +198,11 @@ export function KeyraSessionProvider({ children }: { children: ReactNode }) {
 
   const logout = useCallback(async () => {
     await fetch("/api/auth/logout", { method: "POST", credentials: "include" });
-    if (shouldUseDirectAuthFallback()) {
-      await fetch(`${DIRECT_AUTH_BACKEND}/auth/logout`, {
-        method: "POST",
-        credentials: "include",
-      });
-    }
+    // Always clear central auth cookie as well for cross-app logout consistency.
+    await fetch(`${DIRECT_AUTH_BACKEND}/auth/logout`, {
+      method: "POST",
+      credentials: "include",
+    });
     setUser(null);
     try {
       new BroadcastChannel(AUTH_CHANNEL).postMessage({ type: "logout" });
